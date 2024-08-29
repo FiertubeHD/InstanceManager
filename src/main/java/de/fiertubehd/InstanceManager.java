@@ -30,12 +30,12 @@ public class InstanceManager<K, I>
         primitiveWrapperMap.put(Void.TYPE, Void.TYPE);
     }
 
+    private final Map<K, Map<Integer, I>> instanceMap;
     private final Class<I> instanceClazz;
+
 
     private final Class<? extends Map> mapClazz;
     private final Object[] mapArgs;
-
-    private final Map<K, Map<Integer, I>> instanceMap;
 
     public InstanceManager(@NotNull Class<I> instanceClazz)
     {
@@ -99,9 +99,9 @@ public class InstanceManager<K, I>
         return instance;
     }
 
-    public void removeInstance(@NotNull K key, int instanceId)
+    public boolean removeInstance(@NotNull K key, int instanceId)
     {
-        removeInstanceMapEntry(key, instanceId);
+        return removeInstanceMapEntry(key, instanceId);
     }
 
     public boolean existsInstance(@NotNull K key, int instanceId)
@@ -111,14 +111,15 @@ public class InstanceManager<K, I>
 
 
 
-    public boolean isInstanceIDAssigned(@NotNull K key, int instanceId)
+    public boolean isInstanceIdAssigned(@NotNull K key, int instanceId)
     {
         return instanceMap.containsKey(key) && instanceMap.get(key).containsKey(instanceId);
     }
 
-    public synchronized int getUnassignedInstanceId(@NotNull K key)
+    public int getUnassignedInstanceId(@NotNull K key)
     {
-        if(!instanceMap.containsKey(key)) return 0;
+        if(!instanceMap.containsKey(key))
+            return 0;
 
         int next = 0;
 
@@ -148,9 +149,12 @@ public class InstanceManager<K, I>
         instanceMap.get(key).put(instanceId, instance);
     }
 
-    protected void removeInstanceMapEntry(@NotNull K key, int instanceId)
+    protected boolean removeInstanceMapEntry(@NotNull K key, int instanceId)
     {
-        if(!instanceMap.containsKey(key)) instanceMap.get(key).remove(instanceId);
+        if(!instanceMap.containsKey(key))
+            return false;
+
+        return instanceMap.get(key).remove(instanceId) != null;
     }
 
     @Nullable
@@ -285,6 +289,6 @@ public class InstanceManager<K, I>
     public static void validateInstanceId(int instanceId) throws RuntimeException
     {
         if(!isValidInstanceId(instanceId))
-            throw new IllegalArgumentException("InstanceId out of range. Must be 1-999");
+            throw new IllegalArgumentException("InstanceId out of range. Must be 0-999");
     }
 }

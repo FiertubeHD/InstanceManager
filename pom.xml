@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.fiertubehd</groupId>
-    <artifactId>InstanceManager</artifactId>
+    <artifactId>instancemanager</artifactId>
     <version>1.0</version>
 
     <properties>
@@ -23,4 +23,11 @@
         </dependency>
     </dependencies>
 
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub FiertubeHD Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/fiertubehd/instancemanager</url>
+        </repository>
+    </distributionManagement>
 </project>

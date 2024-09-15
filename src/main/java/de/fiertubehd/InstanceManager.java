@@ -6,6 +6,7 @@ import de.fiertubehd.fluffyannotationslibrary.annotations.Nullable;
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
@@ -35,8 +36,7 @@ public class InstanceManager<K, I>
 
     public InstanceManager(@NotNull Class<I> instanceClazz)
     {
-        if(instanceClazz == null)
-            throw new IllegalArgumentException("InstanceClazz cannot be null.");
+        Objects.requireNonNull(instanceClazz, "InstanceClazz cannot be null.");
 
         instances = new ConcurrentHashMap<>();
 
@@ -60,14 +60,12 @@ public class InstanceManager<K, I>
 
     public I getInstance(@NotNull K key, int instanceId, @NotNull Object[] parameters) throws RuntimeException
     {
-        if(key == null)
-            throw new IllegalArgumentException("Key cannot be null.");
+        Objects.requireNonNull(key, "Key cannot be null.");
 
         if(!isValidInstanceId(instanceId))
             throw new IllegalArgumentException("InstanceId cannot be smaller than 0.");
 
-        if(parameters == null)
-            throw new IllegalArgumentException("Parameters cannot be null.");
+        Objects.requireNonNull(parameters, "Parameters cannot be null.");
 
         ConcurrentHashMap<Integer, I> innerMap = instances.computeIfAbsent(key, k -> new ConcurrentHashMap<>());
 
@@ -88,8 +86,7 @@ public class InstanceManager<K, I>
 
     public boolean unregisterInstance(@NotNull K key, int instanceId)
     {
-        if(key == null)
-            throw new IllegalArgumentException("Key cannot be null.");
+        Objects.requireNonNull(key, "Key cannot be null.");
 
         if(!isValidInstanceId(instanceId))
             throw new IllegalArgumentException("InstanceId cannot be smaller than 0.");
@@ -125,11 +122,8 @@ public class InstanceManager<K, I>
     @NotNull
     public static <E> E createInstance(@NotNull Class<E> instanceClazz, @NotNull Object[] parameters) throws RuntimeException
     {
-        if(instanceClazz == null)
-            throw new IllegalArgumentException("InstanceClazz cannot be null.");
-
-        if(parameters == null)
-            throw new IllegalArgumentException("Parameters cannot be null.");
+        Objects.requireNonNull(instanceClazz, "InstanceClazz cannot be null.");
+        Objects.requireNonNull(parameters, "Parameters cannot be null.");
 
         try
         {
@@ -145,13 +139,10 @@ public class InstanceManager<K, I>
     }
 
     @NotNull
-    public static <E> E createInstance(@NotNull Constructor<E> constructor,  @NotNull Object[] parameters) throws RuntimeException
+    public static <E> E createInstance(@NotNull Constructor<E> constructor, @NotNull Object[] parameters) throws RuntimeException
     {
-        if(constructor == null)
-            throw new IllegalArgumentException("Constructor cannot be null.");
-
-        if(parameters == null)
-            throw new IllegalArgumentException("Parameters cannot be null.");
+        Objects.requireNonNull(constructor, "Constructor cannot be null.");
+        Objects.requireNonNull(parameters, "Parameters cannot be null.");
 
         try
         {
@@ -167,11 +158,8 @@ public class InstanceManager<K, I>
     @NotNull
     public static <E> Constructor<E> findMatchingConstructor(@NotNull Class<E> instanceClazz, @NotNull Object[] parameters) throws RuntimeException
     {
-        if(instanceClazz == null)
-            throw new IllegalArgumentException("InstanceClazz cannot be null.");
-
-        if(parameters == null)
-            throw new IllegalArgumentException("Parameters cannot be null.");
+        Objects.requireNonNull(instanceClazz, "InstanceClazz cannot be null.");
+        Objects.requireNonNull(parameters ,"Parameters cannot be null.");
 
         Constructor<?>[] declaredConstructors = null;
         try
